@@ -1,0 +1,50 @@
+# FlashFusion — Detection + Segmentation Fusion Configuration
+# =============================================================
+# Usage: flashfusion train --config configs/flashfusion_det_seg_320.yaml
+#        flashfusion predict --config configs/flashfusion_det_seg_320.yaml --source image.jpg
+
+fusion:
+  strategy: weighted_box_fusion
+  input_size: [320, 320]
+  weights: [0.5, 0.5]
+  models:
+    - type: detection
+      source: flashdet
+      model_size: m
+      weight: 0.5
+      checkpoint: null
+      frozen: true
+    - type: segmentation
+      source: flashseg
+      model_size: m
+      weight: 0.5
+      checkpoint: null
+      frozen: true
+
+data:
+  train: data/fusion_det_seg_train
+  val: data/fusion_det_seg_val
+  num_classes: 80
+  seg_num_classes: 21
+  format: coco
+
+train:
+  epochs: 60
+  batch_size: 12
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  scheduler: cosine
+  warmup_epochs: 5
+  save_dir: workspace/flashfusion_det_seg
+  device: auto
+  num_workers: 4
+  early_stopping: 15
+
+augment:
+  hsv_h: 0.015
+  hsv_s: 0.4
+  hsv_v: 0.3
+  flip_lr: 0.5
+  mosaic: 0.0
+  scale: [0.8, 1.2]
+  translate: 0.1

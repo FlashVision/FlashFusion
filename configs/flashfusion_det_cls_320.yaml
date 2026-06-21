@@ -1,0 +1,50 @@
+# FlashFusion — Detection + Classification Fusion Configuration
+# ==============================================================
+# Usage: flashfusion train --config configs/flashfusion_det_cls_320.yaml
+#        flashfusion predict --config configs/flashfusion_det_cls_320.yaml --source image.jpg
+
+fusion:
+  strategy: weighted_box_fusion
+  input_size: [320, 320]
+  weights: [0.6, 0.4]
+  models:
+    - type: detection
+      source: flashdet
+      model_size: m
+      weight: 0.6
+      checkpoint: null
+      frozen: true
+    - type: classification
+      source: flashcls
+      model_size: m
+      weight: 0.4
+      checkpoint: null
+      frozen: true
+
+data:
+  train: data/fusion_train
+  val: data/fusion_val
+  num_classes: 80
+  cls_num_classes: 10
+  format: coco
+
+train:
+  epochs: 50
+  batch_size: 16
+  learning_rate: 0.0005
+  weight_decay: 0.0001
+  scheduler: cosine
+  warmup_epochs: 3
+  save_dir: workspace/flashfusion_det_cls
+  device: auto
+  num_workers: 4
+  early_stopping: 10
+
+augment:
+  hsv_h: 0.015
+  hsv_s: 0.5
+  hsv_v: 0.3
+  flip_lr: 0.5
+  mosaic: 0.0
+  scale: [0.8, 1.2]
+  translate: 0.1

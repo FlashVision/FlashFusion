@@ -1,0 +1,59 @@
+# FlashFusion — Ensemble Configuration
+# =======================================
+# Usage: flashfusion train --config configs/flashfusion_ensemble_320.yaml
+#        flashfusion predict --config configs/flashfusion_ensemble_320.yaml --source image.jpg
+#        flashfusion fuse --models model1.pt model2.pt model3.pt --strategy wbf --source image.jpg
+
+fusion:
+  strategy: weighted_box_fusion
+  input_size: [320, 320]
+  weights: [0.4, 0.35, 0.25]
+  iou_threshold: 0.55
+  conf_threshold: 0.25
+  max_detections: 300
+  models:
+    - type: detection
+      source: flashdet
+      model_size: s
+      weight: 0.4
+      checkpoint: null
+      frozen: true
+    - type: detection
+      source: flashdet
+      model_size: m
+      weight: 0.35
+      checkpoint: null
+      frozen: true
+    - type: detection
+      source: flashdet
+      model_size: l
+      weight: 0.25
+      checkpoint: null
+      frozen: true
+
+data:
+  train: data/fusion_ensemble_train
+  val: data/fusion_ensemble_val
+  num_classes: 80
+  format: coco
+
+train:
+  epochs: 30
+  batch_size: 8
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  scheduler: cosine
+  warmup_epochs: 3
+  save_dir: workspace/flashfusion_ensemble
+  device: auto
+  num_workers: 4
+  early_stopping: 10
+
+augment:
+  hsv_h: 0.015
+  hsv_s: 0.5
+  hsv_v: 0.3
+  flip_lr: 0.5
+  mosaic: 0.0
+  scale: [0.8, 1.2]
+  translate: 0.1

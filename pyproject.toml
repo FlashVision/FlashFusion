@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=70.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flashfusion"
+version = "1.0.0"
+description = "FlashFusion: Multi-model vision fusion — ensemble, cascade, and fuse detection, classification, segmentation, and OCR models"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "FlashVision"},
+]
+keywords = ["multi-model", "model-fusion", "ensemble", "computer-vision", "deep-learning", "pytorch", "weighted-box-fusion", "cascade", "edge-ai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+]
+dependencies = [
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "numpy>=1.24.0",
+    "opencv-python>=4.8.0",
+    "Pillow>=9.0.0",
+    "PyYAML>=6.0",
+    "tqdm>=4.65.0",
+]
+
+[project.optional-dependencies]
+export = ["onnx>=1.14.0", "onnxruntime>=1.15.0", "onnxsim>=0.4.0"]
+flash = [
+    # FlashVision ecosystem packages (install separately or from local source):
+    # "flashdet>=1.0.0",
+    # "flashcls>=1.0.0",
+    # "flashseg>=1.0.0",
+    # "flashocr>=1.0.0",
+]
+analytics = ["matplotlib>=3.7.0", "pandas>=2.0.0"]
+all = ["onnx>=1.14.0", "onnxruntime>=1.15.0", "onnxsim>=0.4.0", "matplotlib>=3.7.0", "pandas>=2.0.0"]
+dev = ["pytest", "ruff", "pre-commit"]
+
+[project.urls]
+Homepage = "https://github.com/FlashVision/FlashFusion"
+Repository = "https://github.com/FlashVision/FlashFusion"
+Issues = "https://github.com/FlashVision/FlashFusion/issues"
+
+[project.scripts]
+flashfusion = "flashfusion.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["flashfusion*"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
