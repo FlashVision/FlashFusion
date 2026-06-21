@@ -88,16 +88,12 @@ class CascadeFusion:
         Returns:
             Prediction from the first model exceeding its confidence threshold.
         """
-        for i, (model, threshold) in enumerate(
-            zip(self.models, self.confidence_thresholds)
-        ):
+        for i, (model, threshold) in enumerate(zip(self.models, self.confidence_thresholds)):
             if isinstance(model, nn.Module):
                 with torch.no_grad():
                     prediction = model(image)
             else:
-                raise NotImplementedError(
-                    f"String model IDs require model loading. Got: {model}"
-                )
+                raise NotImplementedError(f"String model IDs require model loading. Got: {model}")
 
             confidence = self._get_confidence(prediction)
             if confidence >= threshold or i == len(self.models) - 1:
@@ -127,7 +123,4 @@ class CascadeFusion:
         return torch.device(device)
 
     def __repr__(self) -> str:
-        return (
-            f"CascadeFusion(num_models={len(self.models)}, "
-            f"thresholds={self.confidence_thresholds})"
-        )
+        return f"CascadeFusion(num_models={len(self.models)}, thresholds={self.confidence_thresholds})"

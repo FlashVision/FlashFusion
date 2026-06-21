@@ -221,7 +221,7 @@ class ModelMerging:
             norm_b = vb.norm()
 
             if norm_a < 1e-8 or norm_b < 1e-8:
-                merged_sd[key] = ((1.0 - t) * sd_a[key] + t * sd_b[key])
+                merged_sd[key] = (1.0 - t) * sd_a[key] + t * sd_b[key]
                 continue
 
             va_unit = va / norm_a
@@ -231,7 +231,7 @@ class ModelMerging:
             omega = torch.acos(cos_omega)
 
             if omega.abs() < 1e-6:
-                merged_sd[key] = ((1.0 - t) * sd_a[key] + t * sd_b[key])
+                merged_sd[key] = (1.0 - t) * sd_a[key] + t * sd_b[key]
                 continue
 
             sin_omega = torch.sin(omega)
@@ -290,7 +290,4 @@ class ModelMerging:
         return self.merge(base, finetuned, **kwargs)
 
     def __repr__(self) -> str:
-        return (
-            f"ModelMerging(method='{self.method}', density={self.density}, "
-            f"temperature={self.temperature})"
-        )
+        return f"ModelMerging(method='{self.method}', density={self.density}, temperature={self.temperature})"

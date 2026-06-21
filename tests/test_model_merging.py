@@ -19,6 +19,7 @@ def _make_simple_model():
 def _make_finetuned_variants(base_model, n_variants=3):
     """Create fine-tuned variants by adding noise to base model."""
     import copy
+
     variants = []
     for i in range(n_variants):
         variant = copy.deepcopy(base_model)

@@ -108,16 +108,18 @@ class TestTimeAugmentation:
 
         for scale in self.scales:
             for rotation in self.rotations:
-                for h_flip in ([False, True] if self.flip_horizontal else [False]):
-                    for v_flip in ([False, True] if self.flip_vertical else [False]):
+                for h_flip in [False, True] if self.flip_horizontal else [False]:
+                    for v_flip in [False, True] if self.flip_vertical else [False]:
                         aug_tensor = inputs.clone()
 
                         if scale != 1.0:
                             new_h = int(h * scale)
                             new_w = int(w * scale)
                             aug_tensor = F.interpolate(
-                                aug_tensor, size=(new_h, new_w),
-                                mode="bilinear", align_corners=False,
+                                aug_tensor,
+                                size=(new_h, new_w),
+                                mode="bilinear",
+                                align_corners=False,
                             )
 
                         if h_flip:
@@ -129,14 +131,16 @@ class TestTimeAugmentation:
                         if rotation != 0:
                             aug_tensor = self._rotate_tensor(aug_tensor, rotation)
 
-                        augmentations.append({
-                            "tensor": aug_tensor,
-                            "scale": scale,
-                            "rotation": rotation,
-                            "h_flip": h_flip,
-                            "v_flip": v_flip,
-                            "original_size": (h, w),
-                        })
+                        augmentations.append(
+                            {
+                                "tensor": aug_tensor,
+                                "scale": scale,
+                                "rotation": rotation,
+                                "h_flip": h_flip,
+                                "v_flip": v_flip,
+                                "original_size": (h, w),
+                            }
+                        )
 
         return augmentations
 
@@ -161,8 +165,10 @@ class TestTimeAugmentation:
         if aug_info["scale"] != 1.0:
             orig_h, orig_w = aug_info["original_size"]
             output = F.interpolate(
-                output, size=(orig_h, orig_w),
-                mode="bilinear", align_corners=False,
+                output,
+                size=(orig_h, orig_w),
+                mode="bilinear",
+                align_corners=False,
             )
 
         return output

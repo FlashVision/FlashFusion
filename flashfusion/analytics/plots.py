@@ -104,8 +104,12 @@ def plot_fusion_comparison(
     ax_fps.grid(True, alpha=0.3, axis="y")
     for bar, val in zip(bars, fps_values):
         ax_fps.text(
-            bar.get_x() + bar.get_width() / 2, bar.get_height(),
-            f"{val:.1f}", ha="center", va="bottom", fontsize=10,
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height(),
+            f"{val:.1f}",
+            ha="center",
+            va="bottom",
+            fontsize=10,
         )
 
     ax_lat = axes[1]
@@ -115,8 +119,12 @@ def plot_fusion_comparison(
     ax_lat.grid(True, alpha=0.3, axis="y")
     for bar, val in zip(bars, latency_values):
         ax_lat.text(
-            bar.get_x() + bar.get_width() / 2, bar.get_height(),
-            f"{val:.2f}", ha="center", va="bottom", fontsize=10,
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height(),
+            f"{val:.2f}",
+            ha="center",
+            va="bottom",
+            fontsize=10,
         )
 
     fig.suptitle(title, fontsize=14, fontweight="bold")
@@ -194,6 +202,7 @@ def _load_training_log(log_path: Union[str, Path]) -> Dict[str, List[float]]:
 
     if log_path.suffix == ".json":
         import json
+
         with open(log_path) as f:
             data = json.load(f)
         if isinstance(data, list):
@@ -206,6 +215,7 @@ def _load_training_log(log_path: Union[str, Path]) -> Dict[str, List[float]]:
 
     elif log_path.suffix == ".csv":
         import csv
+
         with open(log_path) as f:
             reader = csv.DictReader(f)
             for row in reader:

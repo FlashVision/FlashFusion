@@ -67,9 +67,7 @@ class Profiler:
         self._timings.clear()
         self._register_hooks(target_model)
 
-        dummy_input = torch.randn(
-            1, 3, self.input_size[0], self.input_size[1], device=self.device
-        )
+        dummy_input = torch.randn(1, 3, self.input_size[0], self.input_size[1], device=self.device)
 
         # Warmup
         with torch.no_grad():
@@ -99,11 +97,11 @@ class Profiler:
         total_ms = sum(ms for _, ms in layer_timings)
 
         # Print report
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"  FlashFusion Profiler Report ({iterations} iterations)")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         print(f"  {'Layer':<40} {'Time (ms)':>10} {'%':>6}")
-        print(f"  {'-'*40} {'-'*10} {'-'*6}")
+        print(f"  {'-' * 40} {'-' * 10} {'-' * 6}")
 
         for name, ms in layer_timings[:20]:
             pct = (ms / total_ms * 100) if total_ms > 0 else 0
@@ -113,9 +111,9 @@ class Profiler:
         if len(layer_timings) > 20:
             print(f"  ... and {len(layer_timings) - 20} more layers")
 
-        print(f"  {'-'*40} {'-'*10} {'-'*6}")
+        print(f"  {'-' * 40} {'-' * 10} {'-' * 6}")
         print(f"  {'TOTAL':<40} {total_ms:>10.3f}")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}\n")
 
         return {
             "total_ms": total_ms,
@@ -128,17 +126,14 @@ class Profiler:
         for name, module in model.named_modules():
             if len(list(module.children())) == 0:
                 layer_name = name or module.__class__.__name__
-                pre_hook = module.register_forward_pre_hook(
-                    self._make_pre_hook(layer_name)
-                )
-                post_hook = module.register_forward_hook(
-                    self._make_post_hook(layer_name)
-                )
+                pre_hook = module.register_forward_pre_hook(self._make_pre_hook(layer_name))
+                post_hook = module.register_forward_hook(self._make_post_hook(layer_name))
                 self._hooks.append(pre_hook)
                 self._hooks.append(post_hook)
 
     def _make_pre_hook(self, layer_name: str):
         """Create a pre-forward hook that records start time."""
+
         def hook_fn(module, input):
             if self.device.type == "cuda":
                 torch.cuda.synchronize()
@@ -150,6 +145,7 @@ class Profiler:
 
     def _make_post_hook(self, layer_name: str):
         """Create a post-forward hook that records elapsed time."""
+
         def hook_fn(module, input, output):
             if self.device.type == "cuda":
                 torch.cuda.synchronize()

@@ -161,6 +161,7 @@ class Exporter:
         """Validate the exported ONNX model."""
         try:
             import onnx
+
             model = onnx.load(model_path)
             onnx.checker.check_model(model)
         except ImportError:

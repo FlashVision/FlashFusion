@@ -74,12 +74,14 @@ def cmd_version() -> None:
 
     try:
         import torch
+
         print(f"PyTorch: {torch.__version__} (CUDA: {torch.cuda.is_available()})")
     except ImportError:
         print("PyTorch: not installed")
 
     try:
         import torchvision
+
         print(f"TorchVision: {torchvision.__version__}")
     except ImportError:
         print("TorchVision: not installed")
@@ -98,6 +100,7 @@ def cmd_settings() -> None:
 
     try:
         import torch
+
         print(f"\nPyTorch: {torch.__version__}")
         print(f"CUDA available: {torch.cuda.is_available()}")
         if torch.cuda.is_available():

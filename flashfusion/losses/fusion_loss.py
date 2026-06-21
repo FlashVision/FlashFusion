@@ -50,6 +50,7 @@ class FusionLoss(nn.Module):
         self.box_criterion = nn.SmoothL1Loss(reduction="mean")
 
         from flashfusion.losses.consistency_loss import ConsistencyLoss
+
         self.consistency_criterion = ConsistencyLoss()
 
     def forward(
@@ -92,9 +93,7 @@ class FusionLoss(nn.Module):
 
         return total_loss
 
-    def _compute_detection_loss(
-        self, predictions: Dict[str, Any], targets: Dict[str, Any]
-    ) -> torch.Tensor:
+    def _compute_detection_loss(self, predictions: Dict[str, Any], targets: Dict[str, Any]) -> torch.Tensor:
         """Compute detection loss (box regression + objectness).
 
         Uses smooth L1 for box regression and focal-style BCE for objectness.
@@ -134,7 +133,7 @@ class FusionLoss(nn.Module):
             if isinstance(scores, torch.Tensor) and scores.numel() > 0:
                 obj_targets = torch.ones_like(scores[:, :1]) if scores.dim() > 1 else torch.ones_like(scores)
                 obj_loss = F.binary_cross_entropy_with_logits(
-                    scores.view(-1)[:obj_targets.numel()],
+                    scores.view(-1)[: obj_targets.numel()],
                     obj_targets.view(-1),
                     reduction="mean",
                 )
@@ -142,9 +141,7 @@ class FusionLoss(nn.Module):
 
         return box_loss
 
-    def _compute_classification_loss(
-        self, predictions: Dict[str, Any], targets: Dict[str, Any]
-    ) -> torch.Tensor:
+    def _compute_classification_loss(self, predictions: Dict[str, Any], targets: Dict[str, Any]) -> torch.Tensor:
         """Compute image-level classification loss."""
         logits = predictions["class_logits"]
         labels = targets["class_labels"]

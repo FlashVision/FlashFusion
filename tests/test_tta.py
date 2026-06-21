@@ -42,18 +42,14 @@ class TestTTA:
 
     def test_rotation_augmentation(self):
         model = _make_classifier()
-        tta = TestTimeAugmentation(
-            scales=[1.0], flip_horizontal=False, rotations=[0, 90, 180, 270]
-        )
+        tta = TestTimeAugmentation(scales=[1.0], flip_horizontal=False, rotations=[0, 90, 180, 270])
         inputs = torch.randn(1, 3, 32, 32)
         result = tta.predict(model, inputs)
         assert result["num_augmentations"] == 4
 
     def test_combined_augmentations(self):
         model = _make_classifier()
-        tta = TestTimeAugmentation(
-            scales=[1.0, 1.5], flip_horizontal=True, rotations=[0, 180]
-        )
+        tta = TestTimeAugmentation(scales=[1.0, 1.5], flip_horizontal=True, rotations=[0, 180])
         inputs = torch.randn(1, 3, 32, 32)
         result = tta.predict(model, inputs)
         # 2 scales x 2 flips x 2 rotations = 8

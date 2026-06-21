@@ -71,9 +71,7 @@ class Benchmark:
         target_model.eval()
         target_model.to(self.device)
 
-        dummy_input = torch.randn(
-            1, 3, self.input_size[0], self.input_size[1], device=self.device
-        )
+        dummy_input = torch.randn(1, 3, self.input_size[0], self.input_size[1], device=self.device)
 
         # Warmup
         with torch.no_grad():
@@ -100,9 +98,7 @@ class Benchmark:
         fps = 1000.0 / avg_latency if avg_latency > 0 else 0.0
 
         total_params = sum(p.numel() for p in target_model.parameters())
-        trainable_params = sum(
-            p.numel() for p in target_model.parameters() if p.requires_grad
-        )
+        trainable_params = sum(p.numel() for p in target_model.parameters() if p.requires_grad)
 
         memory_mb = None
         if self.device.type == "cuda":
@@ -178,6 +174,7 @@ class Benchmark:
         """Estimate FLOPs using hook-based counting or thop if available."""
         try:
             from thop import profile
+
             flops, _ = profile(model, inputs=(dummy_input,), verbose=False)
             return int(flops)
         except ImportError:
@@ -235,7 +232,4 @@ class Benchmark:
         return torch.device(device)
 
     def __repr__(self) -> str:
-        return (
-            f"Benchmark(model_path={self.model_path}, "
-            f"device={self.device}, iterations={self.iterations})"
-        )
+        return f"Benchmark(model_path={self.model_path}, device={self.device}, iterations={self.iterations})"

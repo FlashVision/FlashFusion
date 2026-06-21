@@ -39,10 +39,7 @@ class BackboneAdapter(nn.Module):
             for param in self.backbone.parameters():
                 param.requires_grad = False
 
-        self.adapters = nn.ModuleList([
-            nn.Conv2d(output_channels, output_channels, 1)
-            for _ in range(feature_levels)
-        ])
+        self.adapters = nn.ModuleList([nn.Conv2d(output_channels, output_channels, 1) for _ in range(feature_levels)])
 
     def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
         """Extract and adapt features from the source backbone.
@@ -121,14 +118,16 @@ class ChannelAdapter(nn.Module):
             for param in self.backbone.parameters():
                 param.requires_grad = False
 
-        self.projections = nn.ModuleList([
-            nn.Sequential(
-                nn.Conv2d(ch, target_channels, 1, bias=False),
-                nn.BatchNorm2d(target_channels),
-                nn.SiLU(inplace=True),
-            )
-            for ch in source_channels
-        ])
+        self.projections = nn.ModuleList(
+            [
+                nn.Sequential(
+                    nn.Conv2d(ch, target_channels, 1, bias=False),
+                    nn.BatchNorm2d(target_channels),
+                    nn.SiLU(inplace=True),
+                )
+                for ch in source_channels
+            ]
+        )
         self.target_channels = target_channels
 
     def forward(self, x: torch.Tensor) -> List[torch.Tensor]:

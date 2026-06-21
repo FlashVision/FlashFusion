@@ -78,9 +78,7 @@ class WeightedBoxFusion:
             all_scores.append(scores)
             all_labels.append(labels)
 
-        fused_boxes, fused_scores, fused_labels = self._wbf(
-            all_boxes, all_scores, all_labels, model_weights
-        )
+        fused_boxes, fused_scores, fused_labels = self._wbf(all_boxes, all_scores, all_labels, model_weights)
 
         return {
             "boxes": torch.from_numpy(fused_boxes).float(),
@@ -111,18 +109,18 @@ class WeightedBoxFusion:
 
         # Collect all boxes with model index and weight
         weighted_boxes = []
-        for model_idx, (boxes, scores, labels) in enumerate(
-            zip(boxes_list, scores_list, labels_list)
-        ):
+        for model_idx, (boxes, scores, labels) in enumerate(zip(boxes_list, scores_list, labels_list)):
             for box_idx in range(len(boxes)):
                 if scores[box_idx] < self.skip_box_threshold:
                     continue
-                weighted_boxes.append({
-                    "box": boxes[box_idx],
-                    "score": scores[box_idx] * weights[model_idx],
-                    "label": labels[box_idx] if len(labels) > box_idx else 0,
-                    "model_idx": model_idx,
-                })
+                weighted_boxes.append(
+                    {
+                        "box": boxes[box_idx],
+                        "score": scores[box_idx] * weights[model_idx],
+                        "label": labels[box_idx] if len(labels) > box_idx else 0,
+                        "model_idx": model_idx,
+                    }
+                )
 
         if not weighted_boxes:
             return np.zeros((0, 4)), np.zeros(0), np.zeros(0, dtype=np.int64)
@@ -159,13 +157,9 @@ class WeightedBoxFusion:
             if self.conf_type == "max":
                 fused_scores.append(max(wb["score"] for wb in cluster))
             elif self.conf_type == "box_and_model_avg":
-                fused_scores.append(
-                    sum(wb["score"] for wb in cluster) / num_models
-                )
+                fused_scores.append(sum(wb["score"] for wb in cluster) / num_models)
             else:
-                fused_scores.append(
-                    sum(wb["score"] for wb in cluster) / len(cluster)
-                )
+                fused_scores.append(sum(wb["score"] for wb in cluster) / len(cluster))
 
         return (
             np.array(fused_boxes),

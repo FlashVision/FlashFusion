@@ -205,6 +205,7 @@ class Trainer:
         """Compute fusion training loss using FusionLoss."""
         if not hasattr(self, "_loss_fn"):
             from flashfusion.losses.fusion_loss import FusionLoss
+
             self._loss_fn = FusionLoss().to(self.device)
 
         predictions = outputs if isinstance(outputs, dict) else {"boxes": outputs}

@@ -128,9 +128,7 @@ def compute_fusion_metrics(
     improvement = (fused_map - best_individual) / max(best_individual, 1e-6) * 100
 
     agreement_rate = _compute_agreement_rate(individual_predictions, iou_threshold)
-    complementarity = _compute_complementarity(
-        fused_predictions, individual_predictions, ground_truths, iou_threshold
-    )
+    complementarity = _compute_complementarity(fused_predictions, individual_predictions, ground_truths, iou_threshold)
 
     return {
         "fused_map": fused_map,

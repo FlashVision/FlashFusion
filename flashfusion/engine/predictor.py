@@ -76,9 +76,7 @@ class Predictor:
                 - 'labels': Class labels.
                 - 'masks': Segmentation masks (if applicable).
         """
-        if isinstance(source, int) or (
-            isinstance(source, str) and source.isdigit()
-        ):
+        if isinstance(source, int) or (isinstance(source, str) and source.isdigit()):
             return self._predict_webcam(int(source) if isinstance(source, str) else source, conf_threshold, save_dir)
 
         if isinstance(source, (str, Path)):
@@ -103,7 +101,9 @@ class Predictor:
 
         return results
 
-    def _predict_video(self, video_path: str, conf_threshold: float, save_dir: Optional[str] = None) -> List[Dict[str, Any]]:
+    def _predict_video(
+        self, video_path: str, conf_threshold: float, save_dir: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """Run inference on a video file frame by frame."""
         import cv2
 
@@ -149,7 +149,9 @@ class Predictor:
 
         return results
 
-    def _predict_webcam(self, device_id: int, conf_threshold: float, save_dir: Optional[str] = None) -> List[Dict[str, Any]]:
+    def _predict_webcam(
+        self, device_id: int, conf_threshold: float, save_dir: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """Run inference on webcam stream. Press 'q' to stop."""
         import cv2
 

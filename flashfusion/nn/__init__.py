@@ -50,9 +50,13 @@ class ConvModule(nn.Module):
                 padding = (kernel_size[0] // 2, kernel_size[1] // 2)
 
         self.conv = nn.Conv2d(
-            in_channels, out_channels,
-            kernel_size=kernel_size, stride=stride,
-            padding=padding, groups=groups, bias=bias,
+            in_channels,
+            out_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            groups=groups,
+            bias=bias,
         )
 
         self.bn = nn.BatchNorm2d(out_channels) if use_bn else nn.Identity()
@@ -114,16 +118,25 @@ class DepthwiseConvModule(nn.Module):
             padding = kernel_size // 2 if isinstance(kernel_size, int) else (kernel_size[0] // 2, kernel_size[1] // 2)
 
         self.depthwise = ConvModule(
-            in_channels, in_channels,
-            kernel_size=kernel_size, stride=stride,
-            padding=padding, groups=in_channels,
-            activation=activation, use_bn=use_bn,
+            in_channels,
+            in_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            groups=in_channels,
+            activation=activation,
+            use_bn=use_bn,
         )
 
         self.pointwise = ConvModule(
-            in_channels, out_channels,
-            kernel_size=1, stride=1, padding=0,
-            groups=1, activation=activation, use_bn=use_bn,
+            in_channels,
+            out_channels,
+            kernel_size=1,
+            stride=1,
+            padding=0,
+            groups=1,
+            activation=activation,
+            use_bn=use_bn,
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

@@ -120,7 +120,7 @@ class ConsistencyLoss(nn.Module):
             p = F.softmax(a / self.temperature, dim=-1)
             kl_ba = F.kl_div(log_q, p, reduction="batchmean")
 
-            return (kl_ab + kl_ba) / 2.0 * (self.temperature ** 2)
+            return (kl_ab + kl_ba) / 2.0 * (self.temperature**2)
 
         elif self.method == "mse":
             return F.mse_loss(a, b)
@@ -153,7 +153,4 @@ class ConsistencyLoss(nn.Module):
         return features
 
     def __repr__(self) -> str:
-        return (
-            f"ConsistencyLoss(method='{self.method}', "
-            f"temperature={self.temperature}, reduction='{self.reduction}')"
-        )
+        return f"ConsistencyLoss(method='{self.method}', temperature={self.temperature}, reduction='{self.reduction}')"

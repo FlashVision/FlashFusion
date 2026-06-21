@@ -86,9 +86,7 @@ class PlattScaling(nn.Module):
 
         nll_before = F.cross_entropy(logits, labels).item()
 
-        optimizer = torch.optim.Adam(
-            [self.weight, self.bias], lr=self.lr, weight_decay=0.0
-        )
+        optimizer = torch.optim.Adam([self.weight, self.bias], lr=self.lr, weight_decay=0.0)
 
         best_loss = float("inf")
         patience_counter = 0
@@ -98,9 +96,7 @@ class PlattScaling(nn.Module):
             optimizer.zero_grad()
             scaled_logits = logits * self.weight + self.bias
             loss = F.cross_entropy(scaled_logits, labels)
-            reg = self.reg_lambda * (
-                (self.weight - 1.0).pow(2).sum() + self.bias.pow(2).sum()
-            )
+            reg = self.reg_lambda * ((self.weight - 1.0).pow(2).sum() + self.bias.pow(2).sum())
             total_loss = loss + reg
             total_loss.backward()
             optimizer.step()

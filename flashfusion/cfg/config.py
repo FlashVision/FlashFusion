@@ -77,14 +77,16 @@ def _parse_model_sources(models_data: List[Dict[str, Any]]) -> List[ModelSource]
     """Parse model source dictionaries into ModelSource objects."""
     sources = []
     for m in models_data:
-        sources.append(ModelSource(
-            type=m.get("type", "detection"),
-            source=m.get("source", "flashdet"),
-            model_size=m.get("model_size", "m"),
-            weight=m.get("weight", 1.0),
-            checkpoint=m.get("checkpoint"),
-            frozen=m.get("frozen", True),
-        ))
+        sources.append(
+            ModelSource(
+                type=m.get("type", "detection"),
+                source=m.get("source", "flashdet"),
+                model_size=m.get("model_size", "m"),
+                weight=m.get("weight", 1.0),
+                checkpoint=m.get("checkpoint"),
+                frozen=m.get("frozen", True),
+            )
+        )
     return sources
 
 

@@ -42,33 +42,39 @@ class FeatureFusionNeck(nn.Module):
         self.fusion_mode = fusion_mode
 
         if fusion_mode == "attention":
-            self.attention = nn.ModuleList([
-                nn.Sequential(
-                    nn.AdaptiveAvgPool2d(1),
-                    nn.Flatten(),
-                    nn.Linear(in_channels * num_models, num_models),
-                    nn.Softmax(dim=-1),
-                )
-                for _ in range(num_levels)
-            ])
+            self.attention = nn.ModuleList(
+                [
+                    nn.Sequential(
+                        nn.AdaptiveAvgPool2d(1),
+                        nn.Flatten(),
+                        nn.Linear(in_channels * num_models, num_models),
+                        nn.Softmax(dim=-1),
+                    )
+                    for _ in range(num_levels)
+                ]
+            )
         elif fusion_mode == "concat":
-            self.projections = nn.ModuleList([
+            self.projections = nn.ModuleList(
+                [
+                    nn.Sequential(
+                        nn.Conv2d(in_channels * num_models, out_channels, 1, bias=False),
+                        nn.BatchNorm2d(out_channels),
+                        nn.SiLU(inplace=True),
+                    )
+                    for _ in range(num_levels)
+                ]
+            )
+
+        self.out_convs = nn.ModuleList(
+            [
                 nn.Sequential(
-                    nn.Conv2d(in_channels * num_models, out_channels, 1, bias=False),
+                    nn.Conv2d(out_channels, out_channels, 3, padding=1, bias=False),
                     nn.BatchNorm2d(out_channels),
                     nn.SiLU(inplace=True),
                 )
                 for _ in range(num_levels)
-            ])
-
-        self.out_convs = nn.ModuleList([
-            nn.Sequential(
-                nn.Conv2d(out_channels, out_channels, 3, padding=1, bias=False),
-                nn.BatchNorm2d(out_channels),
-                nn.SiLU(inplace=True),
-            )
-            for _ in range(num_levels)
-        ])
+            ]
+        )
 
     def forward(self, multi_features: List[List[torch.Tensor]]) -> List[torch.Tensor]:
         """Fuse feature pyramids from multiple models.

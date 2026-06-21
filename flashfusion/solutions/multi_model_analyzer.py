@@ -55,9 +55,7 @@ class MultiModelAnalyzer:
         self._results_cache.append(per_model_outputs)
 
         agreement = self._compute_agreement(per_model_outputs)
-        total_dets = sum(
-            len(out.get("boxes", [])) for out in per_model_outputs
-        )
+        total_dets = sum(len(out.get("boxes", [])) for out in per_model_outputs)
         all_scores = []
         for out in per_model_outputs:
             scores = out.get("scores", [])
@@ -94,9 +92,7 @@ class MultiModelAnalyzer:
         per_model_outputs = self._run_inference(image)
         num_models = len(per_model_outputs)
 
-        detection_counts = [
-            len(out.get("boxes", [])) for out in per_model_outputs
-        ]
+        detection_counts = [len(out.get("boxes", [])) for out in per_model_outputs]
 
         pairwise_iou = np.zeros((num_models, num_models))
         for i in range(num_models):
@@ -104,9 +100,7 @@ class MultiModelAnalyzer:
                 if i == j:
                     pairwise_iou[i, j] = 1.0
                 else:
-                    pairwise_iou[i, j] = self._pairwise_agreement(
-                        per_model_outputs[i], per_model_outputs[j]
-                    )
+                    pairwise_iou[i, j] = self._pairwise_agreement(per_model_outputs[i], per_model_outputs[j])
 
         consensus = self._find_consensus_detections(per_model_outputs)
         unique = self._find_unique_detections(per_model_outputs)
@@ -154,9 +148,7 @@ class MultiModelAnalyzer:
             outputs.append(output)
         return outputs
 
-    def _infer_single(
-        self, model_path: str, image: Union[str, Path, np.ndarray]
-    ) -> Dict[str, Any]:
+    def _infer_single(self, model_path: str, image: Union[str, Path, np.ndarray]) -> Dict[str, Any]:
         """Run a single model on the image.
 
         For models without loaded weights this returns an empty prediction
@@ -189,6 +181,7 @@ class MultiModelAnalyzer:
         """Load and preprocess an image to a normalized tensor."""
         if isinstance(image, (str, Path)):
             import cv2
+
             img = cv2.imread(str(image))
             if img is None:
                 raise FileNotFoundError(f"Cannot read image: {image}")
@@ -216,9 +209,7 @@ class MultiModelAnalyzer:
 
         return float(np.mean(scores)) if scores else 0.0
 
-    def _pairwise_agreement(
-        self, output_a: Dict[str, Any], output_b: Dict[str, Any]
-    ) -> float:
+    def _pairwise_agreement(self, output_a: Dict[str, Any], output_b: Dict[str, Any]) -> float:
         """Compute IoU-based agreement between two model outputs."""
         boxes_a = self._extract_boxes(output_a)
         boxes_b = self._extract_boxes(output_b)
@@ -247,9 +238,7 @@ class MultiModelAnalyzer:
         total = max(len(boxes_a), len(boxes_b))
         return matched / total if total > 0 else 0.0
 
-    def _find_consensus_detections(
-        self, outputs: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+    def _find_consensus_detections(self, outputs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Find detections that appear in all models."""
         if not outputs:
             return []
@@ -261,9 +250,7 @@ class MultiModelAnalyzer:
             found_in_all = True
             for other_output in outputs[1:]:
                 other_boxes = self._extract_boxes(other_output)
-                has_match = any(
-                    self._compute_iou(box, ob) > 0.5 for ob in other_boxes
-                )
+                has_match = any(self._compute_iou(box, ob) > 0.5 for ob in other_boxes)
                 if not has_match:
                     found_in_all = False
                     break
@@ -272,9 +259,7 @@ class MultiModelAnalyzer:
 
         return consensus
 
-    def _find_unique_detections(
-        self, outputs: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+    def _find_unique_detections(self, outputs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Find detections that appear in only one model."""
         unique = []
         for model_idx, output in enumerate(outputs):
@@ -326,7 +311,4 @@ class MultiModelAnalyzer:
         return torch.device(device)
 
     def __repr__(self) -> str:
-        return (
-            f"MultiModelAnalyzer(models={len(self.model_paths)}, "
-            f"device={self.device})"
-        )
+        return f"MultiModelAnalyzer(models={len(self.model_paths)}, device={self.device})"

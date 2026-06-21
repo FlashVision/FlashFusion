@@ -113,6 +113,7 @@ class NMSFusion:
         """
         try:
             from torchvision.ops import nms
+
             return nms(boxes, scores, self.iou_threshold)
         except ImportError:
             return self._nms_numpy(boxes, scores)
@@ -135,6 +136,7 @@ class NMSFusion:
         """
         try:
             from torchvision.ops import batched_nms
+
             return batched_nms(boxes, scores, labels, self.iou_threshold)
         except ImportError:
             return self._nms(boxes, scores)
@@ -180,7 +182,4 @@ class NMSFusion:
         return torch.tensor(np.array(data), dtype=torch.float32)
 
     def __repr__(self) -> str:
-        return (
-            f"NMSFusion(iou_threshold={self.iou_threshold}, "
-            f"max_detections={self.max_detections})"
-        )
+        return f"NMSFusion(iou_threshold={self.iou_threshold}, max_detections={self.max_detections})"

@@ -43,17 +43,13 @@ class Registry:
     def build(self, name: str, **kwargs) -> Any:
         if name not in self._registry:
             available = ", ".join(sorted(self._registry.keys()))
-            raise KeyError(
-                f"{self._name}: '{name}' not found. Available: [{available}]"
-            )
+            raise KeyError(f"{self._name}: '{name}' not found. Available: [{available}]")
         return self._registry[name](**kwargs)
 
     def get(self, name: str) -> Any:
         if name not in self._registry:
             available = ", ".join(sorted(self._registry.keys()))
-            raise KeyError(
-                f"{self._name}: '{name}' not found. Available: [{available}]"
-            )
+            raise KeyError(f"{self._name}: '{name}' not found. Available: [{available}]")
         return self._registry[name]
 
     def list(self) -> list:

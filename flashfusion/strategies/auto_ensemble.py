@@ -81,9 +81,7 @@ class AutoEnsembleSelection:
                     continue
 
                 trial_ensemble = selected + [idx]
-                ensemble_pred = self._compute_ensemble_prediction(
-                    candidate_predictions, trial_ensemble
-                )
+                ensemble_pred = self._compute_ensemble_prediction(candidate_predictions, trial_ensemble)
                 score = self.metric_fn(ensemble_pred, targets)
 
                 if score > best_candidate_score:
@@ -174,6 +172,7 @@ class AutoEnsembleSelection:
         if not selected:
             return []
         from collections import Counter
+
         counts = Counter(selected)
         total = len(selected)
         unique_models = sorted(set(selected))

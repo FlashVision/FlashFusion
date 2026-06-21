@@ -7,26 +7,26 @@ import cv2
 import numpy as np
 
 COLORS = [
-    (255, 56, 56),    # Red
-    (255, 157, 56),   # Orange
-    (255, 224, 56),   # Yellow
-    (56, 255, 56),    # Green
-    (56, 255, 224),   # Cyan
-    (56, 157, 255),   # Blue
-    (157, 56, 255),   # Purple
-    (255, 56, 224),   # Pink
-    (56, 56, 255),    # Deep Blue
-    (224, 255, 56),   # Lime
-    (255, 112, 56),   # Dark Orange
-    (56, 224, 255),   # Light Cyan
-    (168, 56, 255),   # Violet
-    (255, 56, 112),   # Rose
-    (56, 255, 112),   # Mint
-    (112, 56, 255),   # Indigo
-    (255, 168, 56),   # Amber
-    (56, 112, 255),   # Royal Blue
-    (255, 56, 168),   # Magenta
-    (112, 255, 56),   # Chartreuse
+    (255, 56, 56),  # Red
+    (255, 157, 56),  # Orange
+    (255, 224, 56),  # Yellow
+    (56, 255, 56),  # Green
+    (56, 255, 224),  # Cyan
+    (56, 157, 255),  # Blue
+    (157, 56, 255),  # Purple
+    (255, 56, 224),  # Pink
+    (56, 56, 255),  # Deep Blue
+    (224, 255, 56),  # Lime
+    (255, 112, 56),  # Dark Orange
+    (56, 224, 255),  # Light Cyan
+    (168, 56, 255),  # Violet
+    (255, 56, 112),  # Rose
+    (56, 255, 112),  # Mint
+    (112, 56, 255),  # Indigo
+    (255, 168, 56),  # Amber
+    (56, 112, 255),  # Royal Blue
+    (255, 56, 168),  # Magenta
+    (112, 255, 56),  # Chartreuse
 ]
 
 
@@ -89,20 +89,23 @@ def draw_detections(
 
         if label_parts:
             label_text = " ".join(label_parts)
-            (text_w, text_h), baseline = cv2.getTextSize(
-                label_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 1
-            )
+            (text_w, text_h), baseline = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 1)
             cv2.rectangle(
                 image,
                 (x1, y1 - text_h - baseline - 4),
                 (x1 + text_w, y1),
-                color, -1,
+                color,
+                -1,
             )
             cv2.putText(
-                image, label_text,
+                image,
+                label_text,
                 (x1, y1 - baseline - 2),
-                cv2.FONT_HERSHEY_SIMPLEX, font_scale,
-                (255, 255, 255), 1, cv2.LINE_AA,
+                cv2.FONT_HERSHEY_SIMPLEX,
+                font_scale,
+                (255, 255, 255),
+                1,
+                cv2.LINE_AA,
             )
 
     if save_path:
@@ -163,23 +166,40 @@ def draw_fusion_results(
     fused_labels = _to_numpy(fused_results.get("labels", []))
 
     image = draw_detections(
-        image, fused_boxes, fused_scores, fused_labels,
-        class_names=class_names, line_width=3, font_scale=0.6,
+        image,
+        fused_boxes,
+        fused_scores,
+        fused_labels,
+        class_names=class_names,
+        line_width=3,
+        font_scale=0.6,
     )
 
     # Add legend
     legend_y = 20
     cv2.putText(
-        image, "FUSED (bold)", (10, legend_y),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA,
+        image,
+        "FUSED (bold)",
+        (10, legend_y),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.5,
+        (255, 255, 255),
+        1,
+        cv2.LINE_AA,
     )
     if show_individual and individual_results:
         for i in range(len(individual_results)):
             legend_y += 20
             color = COLORS[(i + 10) % len(COLORS)]
             cv2.putText(
-                image, f"Model {i + 1} (faint)", (10, legend_y),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1, cv2.LINE_AA,
+                image,
+                f"Model {i + 1} (faint)",
+                (10, legend_y),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.4,
+                color,
+                1,
+                cv2.LINE_AA,
             )
 
     if save_path:
@@ -193,6 +213,7 @@ def draw_fusion_results(
 def _to_numpy(data) -> np.ndarray:
     """Convert data to numpy array."""
     import torch
+
     if isinstance(data, torch.Tensor):
         return data.cpu().numpy()
     elif isinstance(data, np.ndarray):

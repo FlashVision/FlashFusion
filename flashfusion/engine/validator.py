@@ -57,9 +57,7 @@ class Validator:
         all_targets: List[Dict[str, Any]] = []
 
         if dataloader is None:
-            raise NotImplementedError(
-                "Automatic dataloader construction requires a configured dataset path."
-            )
+            raise NotImplementedError("Automatic dataloader construction requires a configured dataset path.")
 
         with torch.no_grad():
             for batch in dataloader:

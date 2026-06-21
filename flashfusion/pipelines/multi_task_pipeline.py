@@ -127,6 +127,7 @@ class MultiTaskPipeline:
             return {"error": f"Cannot load model for task '{task_name}' from '{model_id}'"}
 
         import cv2
+
         resized = cv2.resize(image, (320, 320))
         tensor = torch.from_numpy(resized).permute(2, 0, 1).float() / 255.0
         tensor = tensor.unsqueeze(0).to(self.device)
@@ -155,6 +156,7 @@ class MultiTaskPipeline:
             return model_id
 
         from pathlib import Path as _Path
+
         path = _Path(str(model_id))
         if path.exists() and path.suffix in (".pt", ".pth"):
             checkpoint = torch.load(str(path), map_location=self.device, weights_only=False)
@@ -184,6 +186,7 @@ class MultiTaskPipeline:
         if isinstance(source, np.ndarray):
             return source
         import cv2
+
         img = cv2.imread(str(source))
         if img is None:
             raise FileNotFoundError(f"Cannot load image: {source}")

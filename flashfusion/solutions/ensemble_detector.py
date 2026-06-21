@@ -78,11 +78,13 @@ class EnsembleDetector:
 
         for i in range(len(scores)):
             if scores[i] >= self.conf_threshold:
-                results.append({
-                    "bbox": boxes[i].tolist(),
-                    "score": float(scores[i]),
-                    "label": int(labels[i]),
-                })
+                results.append(
+                    {
+                        "bbox": boxes[i].tolist(),
+                        "score": float(scores[i]),
+                        "label": int(labels[i]),
+                    }
+                )
 
         return results
 
@@ -126,29 +128,36 @@ class EnsembleDetector:
                     scaled_boxes[:, 1] *= scale_y
                     scaled_boxes[:, 2] *= scale_x
                     scaled_boxes[:, 3] *= scale_y
-                    predictions.append({
-                        "boxes": scaled_boxes,
-                        "scores": scores,
-                        "labels": labels,
-                    })
+                    predictions.append(
+                        {
+                            "boxes": scaled_boxes,
+                            "scores": scores,
+                            "labels": labels,
+                        }
+                    )
                 else:
-                    predictions.append({
+                    predictions.append(
+                        {
+                            "boxes": torch.zeros(0, 4),
+                            "scores": torch.zeros(0),
+                            "labels": torch.zeros(0, dtype=torch.long),
+                        }
+                    )
+            else:
+                predictions.append(
+                    {
                         "boxes": torch.zeros(0, 4),
                         "scores": torch.zeros(0),
                         "labels": torch.zeros(0, dtype=torch.long),
-                    })
-            else:
-                predictions.append({
-                    "boxes": torch.zeros(0, 4),
-                    "scores": torch.zeros(0),
-                    "labels": torch.zeros(0, dtype=torch.long),
-                })
+                    }
+                )
 
         return predictions
 
     def _load_model(self, model_path: str) -> torch.nn.Module:
         """Load a single detection model from path."""
         from pathlib import Path as _Path
+
         path = _Path(model_path)
         if path.exists() and path.suffix in (".pt", ".pth"):
             checkpoint = torch.load(str(path), map_location=self.device, weights_only=False)
@@ -167,6 +176,7 @@ class EnsembleDetector:
     def _build_strategy(self):
         """Build the fusion strategy instance."""
         from flashfusion.strategies import get_strategy
+
         return get_strategy(
             self.strategy_name,
             weights=self.weights,
@@ -182,7 +192,5 @@ class EnsembleDetector:
 
     def __repr__(self) -> str:
         return (
-            f"EnsembleDetector(models={len(self.model_paths)}, "
-            f"strategy='{self.strategy_name}', "
-            f"weights={self.weights})"
+            f"EnsembleDetector(models={len(self.model_paths)}, strategy='{self.strategy_name}', weights={self.weights})"
         )

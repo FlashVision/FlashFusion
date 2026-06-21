@@ -20,11 +20,13 @@ def _make_predictions(num_models: int = 3, num_boxes: int = 5) -> list:
     for _ in range(num_models):
         boxes = np.random.rand(num_boxes, 4) * 100
         boxes[:, 2:] += boxes[:, :2]
-        predictions.append({
-            "boxes": torch.from_numpy(boxes).float(),
-            "scores": torch.rand(num_boxes),
-            "labels": torch.zeros(num_boxes, dtype=torch.long),
-        })
+        predictions.append(
+            {
+                "boxes": torch.from_numpy(boxes).float(),
+                "scores": torch.rand(num_boxes),
+                "labels": torch.zeros(num_boxes, dtype=torch.long),
+            }
+        )
     return predictions
 
 

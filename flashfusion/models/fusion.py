@@ -158,7 +158,7 @@ class FlashFusion(nn.Module):
         results = []
         with torch.no_grad():
             for i in range(images_tensor.shape[0]):
-                output = self.forward(images_tensor[i:i+1])
+                output = self.forward(images_tensor[i : i + 1])
                 result = {"raw_output": output}
                 if isinstance(output, dict):
                     if "scores" in output:

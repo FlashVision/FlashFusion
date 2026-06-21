@@ -106,7 +106,7 @@ def main():
     weights = [1.0 / args.num_models] * args.num_models
 
     print(f"\n  {'Strategy':<15} {'FPS':>8} {'Avg (ms)':>10} {'Min (ms)':>10} {'Max (ms)':>10}")
-    print(f"  {'-'*15} {'-'*8} {'-'*10} {'-'*10} {'-'*10}")
+    print(f"  {'-' * 15} {'-' * 8} {'-' * 10} {'-' * 10} {'-' * 10}")
 
     results = {}
     for strategy_name in strategies_to_test:

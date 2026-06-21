@@ -88,13 +88,15 @@ class DetClsPipeline:
             crop = self._crop_detection(image, det["bbox"])
             cls_result = self._run_classification(crop)
 
-            results.append({
-                "bbox": det["bbox"],
-                "det_score": det["score"],
-                "label": cls_result["label"],
-                "cls_score": cls_result["score"],
-                "confidence": det["score"] * cls_result["score"],
-            })
+            results.append(
+                {
+                    "bbox": det["bbox"],
+                    "det_score": det["score"],
+                    "label": cls_result["label"],
+                    "cls_score": cls_result["score"],
+                    "confidence": det["score"] * cls_result["score"],
+                }
+            )
 
         return results
 
@@ -138,11 +140,13 @@ class DetClsPipeline:
                 box[1] *= scale_y
                 box[2] *= scale_x
                 box[3] *= scale_y
-                detections.append({
-                    "bbox": box.tolist(),
-                    "score": float(scores[i]),
-                    "label": int(labels[i]) if i < len(labels) else 0,
-                })
+                detections.append(
+                    {
+                        "bbox": box.tolist(),
+                        "score": float(scores[i]),
+                        "label": int(labels[i]) if i < len(labels) else 0,
+                    }
+                )
 
         return detections
 
@@ -191,6 +195,7 @@ class DetClsPipeline:
             return model_id
 
         from pathlib import Path as _Path
+
         path = _Path(str(model_id))
         if path.exists() and path.suffix in (".pt", ".pth"):
             checkpoint = torch.load(str(path), map_location=self.device, weights_only=False)
@@ -203,9 +208,7 @@ class DetClsPipeline:
                 model.eval()
                 return model
 
-        raise ValueError(
-            f"Cannot load model '{model_id}'. Provide a valid .pt/.pth path or nn.Module instance."
-        )
+        raise ValueError(f"Cannot load model '{model_id}'. Provide a valid .pt/.pth path or nn.Module instance.")
 
     def _crop_detection(self, image: np.ndarray, bbox: List[float]) -> np.ndarray:
         """Crop a detection region from the image with padding.
@@ -236,6 +239,7 @@ class DetClsPipeline:
             return source
 
         import cv2
+
         path = Path(source)
         img = cv2.imread(str(path))
         if img is None:

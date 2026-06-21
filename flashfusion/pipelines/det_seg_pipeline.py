@@ -116,12 +116,14 @@ class DetSegPipeline:
         for det in filtered_dets:
             crop = self._crop_region(image, det["bbox"])
             mask = self._run_segmentation(crop)
-            instance_masks.append({
-                "bbox": det["bbox"],
-                "label": det.get("label", 0),
-                "score": det["score"],
-                "mask": mask,
-            })
+            instance_masks.append(
+                {
+                    "bbox": det["bbox"],
+                    "label": det.get("label", 0),
+                    "score": det["score"],
+                    "mask": mask,
+                }
+            )
 
         return {"detections": filtered_dets, "instance_masks": instance_masks}
 
@@ -135,12 +137,14 @@ class DetSegPipeline:
         for det in detections:
             if det["score"] < self.det_threshold:
                 continue
-            fused.append({
-                "bbox": det["bbox"],
-                "label": det.get("label", 0),
-                "score": det["score"],
-                "has_mask": masks is not None,
-            })
+            fused.append(
+                {
+                    "bbox": det["bbox"],
+                    "label": det.get("label", 0),
+                    "score": det["score"],
+                    "has_mask": masks is not None,
+                }
+            )
         return fused
 
     def _run_detection(self, image: np.ndarray) -> List[Dict[str, Any]]:
@@ -176,11 +180,13 @@ class DetSegPipeline:
                 box[1] *= scale_y
                 box[2] *= scale_x
                 box[3] *= scale_y
-                detections.append({
-                    "bbox": box.tolist(),
-                    "score": float(scores[i]),
-                    "label": int(labels[i]) if i < len(labels) else 0,
-                })
+                detections.append(
+                    {
+                        "bbox": box.tolist(),
+                        "score": float(scores[i]),
+                        "label": int(labels[i]) if i < len(labels) else 0,
+                    }
+                )
 
         return detections
 
@@ -218,6 +224,7 @@ class DetSegPipeline:
             return model_id
 
         from pathlib import Path as _Path
+
         path = _Path(str(model_id))
         if path.exists() and path.suffix in (".pt", ".pth"):
             checkpoint = torch.load(str(path), map_location=self.device, weights_only=False)
@@ -230,9 +237,7 @@ class DetSegPipeline:
                 model.eval()
                 return model
 
-        raise ValueError(
-            f"Cannot load model '{model_id}'. Provide a valid .pt/.pth path or nn.Module instance."
-        )
+        raise ValueError(f"Cannot load model '{model_id}'. Provide a valid .pt/.pth path or nn.Module instance.")
 
     def _crop_region(self, image: np.ndarray, bbox: List[float]) -> np.ndarray:
         """Crop image region from bounding box."""
@@ -247,6 +252,7 @@ class DetSegPipeline:
         if isinstance(source, np.ndarray):
             return source
         import cv2
+
         img = cv2.imread(str(source))
         if img is None:
             raise FileNotFoundError(f"Cannot load image: {source}")

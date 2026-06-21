@@ -111,8 +111,11 @@ def main():
         try:
             strat = get_strategy(strategy_name, weights=weights)
             temp_fusion = FlashFusion(
-                models=models, strategy=strat,
-                input_size=(320, 320), weights=weights, device=args.device,
+                models=models,
+                strategy=strat,
+                input_size=(320, 320),
+                weights=weights,
+                device=args.device,
             )
             start = time.perf_counter()
             with torch.no_grad():
