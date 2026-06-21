@@ -122,7 +122,6 @@ class FlashFusion(nn.Module):
             List of prediction result dictionaries.
         """
         import cv2
-        import numpy as np
 
         self.eval()
         conf_threshold = kwargs.get("conf_threshold", 0.25)

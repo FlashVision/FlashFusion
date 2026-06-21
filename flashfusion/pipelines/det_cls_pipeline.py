@@ -5,7 +5,7 @@ region for fine-grained recognition (e.g., detect vehicles then classify make/mo
 """
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Union
 
 import numpy as np
 import torch

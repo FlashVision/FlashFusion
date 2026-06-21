@@ -1,6 +1,5 @@
 """Tests for Test-Time Augmentation."""
 
-import pytest
 import torch
 import torch.nn as nn
 

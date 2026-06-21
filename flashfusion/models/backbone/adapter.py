@@ -4,7 +4,7 @@ Adapters normalize feature outputs from heterogeneous backbones (e.g., ResNet,
 EfficientNet, CSPDarknet) into a unified feature format for fusion.
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import List
 
 import torch
 import torch.nn as nn

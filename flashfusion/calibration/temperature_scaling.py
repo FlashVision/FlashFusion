@@ -7,7 +7,7 @@ held-out validation set.
 
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Dict
 
 import torch
 import torch.nn as nn

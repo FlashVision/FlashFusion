@@ -6,7 +6,6 @@ across multiple classification models.
 
 from typing import Any, Dict, List, Optional
 
-import numpy as np
 import torch
 
 from flashfusion.registry import STRATEGIES

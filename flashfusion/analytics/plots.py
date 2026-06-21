@@ -165,7 +165,7 @@ def plot_strategy_comparison(
     for i, strategy in enumerate(strategies):
         values = [strategy_results[strategy].get(m, 0) for m in metric_names]
         offset = (i - len(strategies) / 2 + 0.5) * width
-        bars = ax.bar(x + offset, values, width, label=strategy, color=colors[i])
+        ax.bar(x + offset, values, width, label=strategy, color=colors[i])
 
     ax.set_xlabel("Metric")
     ax.set_ylabel("Value")

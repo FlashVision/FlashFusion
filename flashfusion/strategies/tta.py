@@ -6,7 +6,7 @@ and fuses the results for improved robustness and accuracy.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional
 
 import torch
 import torch.nn as nn

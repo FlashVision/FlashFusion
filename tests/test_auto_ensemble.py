@@ -1,6 +1,5 @@
 """Tests for auto-ensemble selection."""
 
-import pytest
 import torch
 
 from flashfusion.strategies.auto_ensemble import AutoEnsembleSelection

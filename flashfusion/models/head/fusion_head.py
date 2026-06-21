@@ -4,7 +4,7 @@ These heads sit on top of fused features and produce the final task-specific
 outputs (detections, classifications, segmentation masks, etc.).
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 
 import torch
 import torch.nn as nn

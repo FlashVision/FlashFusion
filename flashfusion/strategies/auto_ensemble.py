@@ -6,12 +6,9 @@ selection for building optimal ensembles.
 
 from __future__ import annotations
 
-import copy
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-import numpy as np
 import torch
-import torch.nn as nn
 
 from flashfusion.registry import STRATEGIES
 
@@ -139,7 +136,7 @@ class AutoEnsembleSelection:
         for fold in range(self.n_folds):
             val_start = fold * fold_size
             val_end = val_start + fold_size if fold < self.n_folds - 1 else n_samples
-            val_idx = indices[val_start:val_end]
+            indices[val_start:val_end]
             train_idx = torch.cat([indices[:val_start], indices[val_end:]])
 
             fold_preds = [p[train_idx] for p in candidate_predictions]

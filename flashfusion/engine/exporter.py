@@ -5,7 +5,7 @@ of the exported fused pipeline.
 """
 
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 
 import torch
 import torch.nn as nn

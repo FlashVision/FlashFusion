@@ -4,7 +4,7 @@ Fuses feature maps from multiple backbones at the feature pyramid level,
 enabling deep integration of complementary representations.
 """
 
-from typing import List, Optional
+from typing import List
 
 import torch
 import torch.nn as nn
